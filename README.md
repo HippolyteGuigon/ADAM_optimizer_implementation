@@ -23,5 +23,8 @@ The all project was coded under PEP-8 (https://peps.python.org/pep-0008/) and fl
 
 ## Screenshot
 
+![Adam optimization](ressources/Adam.gif)
+
+Adam optimization performed on a convex function
 
 ## How to use ?

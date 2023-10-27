@@ -34,3 +34,20 @@ class Adam:
         assert 0 <= self.beta1 <= 1, "beta1 must be between 0 and 1"
         assert 0 <= self.beta2 <= 1, "beta2 must be between 0 and 1"
         assert epsilon > 0, "epsilon parameter must be strictly positive"
+
+    def zero_grad(self) -> None:
+        pass
+
+    def step(self) -> None:
+        """
+        The goal of this function is to apply
+        an optimisation step to the parameters
+        according to ADAM rules
+
+        Arguments:
+            -None
+        Returns:
+            -None
+        """
+
+        pass

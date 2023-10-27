@@ -2,6 +2,7 @@ import torchvision
 import torch
 import numpy as np
 import warnings
+import torch.nn as nn
 
 warnings.filterwarnings("ignore")
 
@@ -38,8 +39,6 @@ def load_mnist_data(batch_size: int = 64) -> torch._utils:
     Returns:
         -data: torch.tensor: The MNIST
         data
-        -targets: torch.tensor: The targets
-        of the loaded data
     """
 
     train_loader = torch.utils.data.DataLoader(
@@ -57,3 +56,42 @@ def load_mnist_data(batch_size: int = 64) -> torch._utils:
     data_iterator = iter(train_loader)
 
     return data_iterator
+
+
+class Feed_Forward_Neural_Network(nn.Module):
+    """
+    The goal of this class is creating
+    a basic neural network that will
+    be used with the coded optimizer to
+    check its working well
+
+    Arguments:
+        -None
+    Returns:
+        -None
+    """
+
+    def __init__(self):
+        super(Feed_Forward_Neural_Network, self).__init__()
+        self.fc1 = nn.Linear(28 * 28, 128)
+        self.fc2 = nn.Linear(128, 10)
+
+    def forward(self, x: torch.tensor) -> torch.tensor:
+        """
+        The goal of this function is
+        to apply a forward pass operation
+        to a given input data
+
+        Arguments:
+            -x: torch.tensor: The input
+            data
+        Returns:
+            -output: torch.tensor: The
+            transformed input data
+        """
+
+        x = x.view(-1, 28 * 28)
+        x = torch.relu(self.fc1(x))
+        output = self.fc2(x)
+
+        return output

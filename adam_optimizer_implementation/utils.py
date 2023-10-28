@@ -3,7 +3,7 @@ import torch
 import numpy as np
 import warnings
 import torch.nn as nn
-import torch.optim as optim
+from adam_optimizer_implementation.optimizer import Adam
 
 warnings.filterwarnings("ignore")
 
@@ -98,7 +98,7 @@ class Feed_Forward_Neural_Network(nn.Module):
 
 
 def launch_training(
-    optimizer: torch.optim = optim.Adam, num_epochs: int = 10, lr: float = 1e-3
+    optimizer: torch.optim = Adam, num_epochs: int = 10, lr: float = 1e-3
 ) -> None:
     """
     The goal of this function is to
@@ -124,14 +124,10 @@ def launch_training(
 
     for epoch in range(num_epochs):
         for i, (images, labels) in enumerate(train_loader):
-            # origin shape: [100, 1, 28, 28]
-            # resized: [100, 784]
             images = images.reshape(-1, 28 * 28).to(device)
             labels = labels.to(device)
-            # Forward pass
             outputs = model(images)
             loss = criterion(outputs, labels)
-            # Backward and optimize
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()

@@ -3,6 +3,7 @@ import torch
 import numpy as np
 import warnings
 import torch.nn as nn
+import torch.optim as optim
 
 warnings.filterwarnings("ignore")
 
@@ -53,9 +54,8 @@ def load_mnist_data(batch_size: int = 64) -> torch._utils:
         batch_size=batch_size,
         shuffle=True,
     )
-    data_iterator = iter(train_loader)
 
-    return data_iterator
+    return train_loader
 
 
 class Feed_Forward_Neural_Network(nn.Module):
@@ -95,3 +95,50 @@ class Feed_Forward_Neural_Network(nn.Module):
         output = self.fc2(x)
 
         return output
+
+
+def launch_training(
+    optimizer: torch.optim = optim.Adam, num_epochs: int = 10, lr: float = 1e-3
+) -> None:
+    """
+    The goal of this function is to
+    launch the training of the feed
+    forward neural network on the MNIST
+    dataset
+
+    Arguments:
+        -optimizer: torch.optim: The custom
+        optimizer that will be used
+    Returns:
+        -None
+    """
+
+    model = Feed_Forward_Neural_Network()
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optimizer(model.parameters(), lr=0.001)
+
+    train_loader = load_mnist_data()
+    n_total_steps = len(train_loader)
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    for epoch in range(num_epochs):
+        for i, (images, labels) in enumerate(train_loader):
+            # origin shape: [100, 1, 28, 28]
+            # resized: [100, 784]
+            images = images.reshape(-1, 28 * 28).to(device)
+            labels = labels.to(device)
+            # Forward pass
+            outputs = model(images)
+            loss = criterion(outputs, labels)
+            # Backward and optimize
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            if (i + 1) % 100 == 0:
+                print(
+                    f"Epoch [{epoch+1}/{num_epochs}], "
+                    f"Step[{i+1}/{n_total_steps}], "
+                    f"Loss: {loss.item(): .4f}"
+                )

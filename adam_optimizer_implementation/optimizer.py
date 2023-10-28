@@ -9,12 +9,13 @@ class Adam:
     Parameters:
         -params: Dict: The initial parameters
         to be optimized
-        -learning_rate: float: The learning_rate
+        -lr: float: The learning_rate
         to be applied
         -betas: Tuple: The couple of betas to be
         applied respectively for first and second-order
         gradient moment
-        -epsilon: float:
+        -epsilon: float: The minimal denominator to be
+        applied during optimization
 
     Returns:
         -None
@@ -23,8 +24,9 @@ class Adam:
     def __init__(
         self,
         params: Dict,
-        betas: Tuple(float, float) = (0.9, 0.999),
+        betas: Tuple[float, float] = (0.9, 0.999),
         epsilon: float = 1e-08,
+        lr: float = 1e-03,
         **kwargs
     ) -> None:
         self.params = params

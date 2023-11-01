@@ -131,8 +131,6 @@ def launch_training(
             loss.backward()
             optimizer.step()
 
-            # optimizer.zero_grad()
-
             if (i + 1) % 100 == 0:
                 print(
                     f"Epoch [{epoch+1}/{num_epochs}], "

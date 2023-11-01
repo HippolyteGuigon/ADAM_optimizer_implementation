@@ -28,7 +28,7 @@ def get_label(x: int) -> torch.tensor:
     return np.array(labels)
 
 
-def load_mnist_data(batch_size: int = 64) -> torch._utils:
+def load_mnist_data(batch_size: int = 128) -> torch._utils:
     """
     The goal of this function is to
     load the MNIST dataset to carry
@@ -115,7 +115,7 @@ def launch_training(
 
     model = Feed_Forward_Neural_Network()
     criterion = nn.CrossEntropyLoss()
-    optimizer = optimizer(model.parameters(), lr=0.001)
+    optimizer = optimizer(params=model.parameters(), lr=lr)
 
     train_loader = load_mnist_data()
     n_total_steps = len(train_loader)
@@ -128,9 +128,10 @@ def launch_training(
             labels = labels.to(device)
             outputs = model(images)
             loss = criterion(outputs, labels)
-            optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+
+            # optimizer.zero_grad()
 
             if (i + 1) % 100 == 0:
                 print(
@@ -138,3 +139,6 @@ def launch_training(
                     f"Step[{i+1}/{n_total_steps}], "
                     f"Loss: {loss.item(): .4f}"
                 )
+
+                for elem in model.parameters():
+                    print(elem.flatten()[0])

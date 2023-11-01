@@ -32,13 +32,34 @@ class Adam:
         self.params = params
         self.beta1 = betas[0]
         self.beta2 = betas[1]
+        self.lr = lr
 
         assert 0 <= self.beta1 <= 1, "beta1 must be between 0 and 1"
         assert 0 <= self.beta2 <= 1, "beta2 must be between 0 and 1"
         assert epsilon > 0, "epsilon parameter must be strictly positive"
 
     def zero_grad(self) -> None:
-        pass
+        """
+        The goal of this function is to
+        reinitialize the gradients of
+        the different parameters
+
+        Arguments:
+            -None
+        Returns:
+            -None
+        """
+
+        for param in self.params:
+            if param.grad is not None:
+                param.grad = None
+
+    def update_gradient(self) -> None:
+        for param in self.params:
+            param -= self.lr * param.grad
+            if param.grad is not None:
+                param.grad = None
+            yield param
 
     def step(self) -> None:
         """
@@ -52,4 +73,4 @@ class Adam:
             -None
         """
 
-        pass
+        self.params = self.update_gradient()

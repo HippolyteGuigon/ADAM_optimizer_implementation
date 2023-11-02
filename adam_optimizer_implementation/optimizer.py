@@ -1,3 +1,4 @@
+import torch
 from typing import Dict, Tuple
 
 
@@ -30,6 +31,7 @@ class Adam:
         **kwargs
     ) -> None:
         self.params = params
+        self.updated_params = []
         self.beta1 = betas[0]
         self.beta2 = betas[1]
         self.lr = lr
@@ -50,18 +52,11 @@ class Adam:
             -None
         """
 
-        for param in self.params:
+        for param in self.updated_params:
             if param.grad is not None:
-                param.grad = None
+                param.grad.data.zero_()
 
-    def update_gradient(self) -> None:
-        for param in self.params:
-            param -= self.lr * param.grad
-            if param.grad is not None:
-                param.grad = None
-            yield param
-
-    def step(self) -> None:
+    def step(self, iterator) -> None:
         """
         The goal of this function is to apply
         an optimisation step to the parameters
@@ -73,4 +68,6 @@ class Adam:
             -None
         """
 
-        self.params = self.update_gradient()
+        with torch.no_grad():
+            for model_param in iterator:
+                model_param.data -= self.lr * model_param.grad

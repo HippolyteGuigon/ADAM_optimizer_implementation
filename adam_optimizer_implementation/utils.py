@@ -129,7 +129,8 @@ def launch_training(
             outputs = model(images)
             loss = criterion(outputs, labels)
             loss.backward()
-            optimizer.step()
+            optimizer.zero_grad()
+            optimizer.step(model.parameters())
 
             if (i + 1) % 100 == 0:
                 print(
@@ -137,6 +138,3 @@ def launch_training(
                     f"Step[{i+1}/{n_total_steps}], "
                     f"Loss: {loss.item(): .4f}"
                 )
-
-                for elem in model.parameters():
-                    print(elem.flatten()[0])

@@ -4,6 +4,18 @@ import torch.nn as nn
 from typing import Dict, Tuple
 
 
+class Optimizer:
+    pass
+
+
+class SGD:
+    pass
+
+
+class RMSProp:
+    pass
+
+
 class Adam:
     """
     The goal of this class is the implementation
@@ -81,7 +93,7 @@ class Adam:
                 self.t += 1
                 self.g = model_param.grad
                 self.m[i] = self.beta1 * self.m[i] + (1 - self.beta1) * self.g
-                self.v[i] = self.beta2 * self.v[i] + (1 - self.beta2) * self.g * self.g
+                self.v[i] = self.beta2 * self.v[i] + (1 - self.beta2) * self.g**2
                 debiased_m = self.m[i] / (1 - self.beta1**self.t)
                 debiased_v = self.v[i] / (1 - self.beta2**self.t)
                 model_param.data -= (

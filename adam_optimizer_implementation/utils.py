@@ -115,7 +115,7 @@ def launch_training(
 
     model = Feed_Forward_Neural_Network()
     criterion = nn.CrossEntropyLoss()
-    optimizer = optimizer(params=model.parameters(), lr=lr)
+    optimizer = optimizer(model=model, params=model.parameters(), lr=lr)
 
     train_loader = load_mnist_data()
     n_total_steps = len(train_loader)
@@ -130,7 +130,7 @@ def launch_training(
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.zero_grad()
-            optimizer.step(model.parameters())
+            optimizer.step()
 
             if (i + 1) % 100 == 0:
                 print(

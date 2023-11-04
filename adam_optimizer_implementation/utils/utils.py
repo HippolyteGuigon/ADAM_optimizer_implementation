@@ -3,7 +3,7 @@ import torch
 import numpy as np
 import warnings
 import torch.nn as nn
-from adam_optimizer_implementation.optimizer import Adam
+from ..optim.optimizer import Adam
 
 warnings.filterwarnings("ignore")
 

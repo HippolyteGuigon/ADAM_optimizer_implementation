@@ -5,7 +5,42 @@ from typing import Dict, Tuple
 
 
 class Optimizer:
-    pass
+    """
+    The goal of this class is to be
+    a parent class for all optimizers
+    containing meta methods
+
+    Parameters:
+        -params: Dict: The initial parameters
+        to be optimized
+        -lr: float: The learning_rate
+        to be applied
+    Returns:
+        -None
+    """
+
+    def __init__(self, params: Dict, lr: float = 1e-3) -> None:
+        self.params = params
+        self.lr = lr
+
+    def zero_grad(self) -> None:
+        """
+        The goal of this function is to
+        reinitialize the gradients of
+        the different parameters
+
+        Arguments:
+            -None
+        Returns:
+            -None
+        """
+
+        for param in self.params:
+            if param.grad is not None:
+                param.grad.data.zero_()
+
+    def step():
+        raise NotImplementedError("Subclasses must implement the step method")
 
 
 class SGD:
@@ -16,7 +51,7 @@ class RMSProp:
     pass
 
 
-class Adam:
+class Adam(Optimizer):
     """
     The goal of this class is the implementation
     of the Adam optimizer algorithm
@@ -45,6 +80,7 @@ class Adam:
         lr: float = 1e-03,
         **kwargs
     ) -> None:
+        super().__init__(params, lr)
         self.params = params
         self.updated_params = []
         self.beta1 = betas[0]
@@ -59,22 +95,6 @@ class Adam:
         assert 0 <= self.beta1 <= 1, "beta1 must be between 0 and 1"
         assert 0 <= self.beta2 <= 1, "beta2 must be between 0 and 1"
         assert epsilon > 0, "epsilon parameter must be strictly positive"
-
-    def zero_grad(self) -> None:
-        """
-        The goal of this function is to
-        reinitialize the gradients of
-        the different parameters
-
-        Arguments:
-            -None
-        Returns:
-            -None
-        """
-
-        for param in self.updated_params:
-            if param.grad is not None:
-                param.grad.data.zero_()
 
     def step(self) -> None:
         """

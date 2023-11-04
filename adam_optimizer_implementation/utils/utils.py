@@ -8,6 +8,45 @@ from adam_optimizer_implementation.optimizer import Adam
 warnings.filterwarnings("ignore")
 
 
+class Feed_Forward_Neural_Network(nn.Module):
+    """
+    The goal of this class is creating
+    a basic neural network that will
+    be used with the coded optimizer to
+    check its working well
+
+    Arguments:
+        -None
+    Returns:
+        -None
+    """
+
+    def __init__(self):
+        super(Feed_Forward_Neural_Network, self).__init__()
+        self.fc1 = nn.Linear(28 * 28, 128)
+        self.fc2 = nn.Linear(128, 10)
+
+    def forward(self, x: torch.tensor) -> torch.tensor:
+        """
+        The goal of this function is
+        to apply a forward pass operation
+        to a given input data
+
+        Arguments:
+            -x: torch.tensor: The input
+            data
+        Returns:
+            -output: torch.tensor: The
+            transformed input data
+        """
+
+        x = x.view(-1, 28 * 28)
+        x = torch.relu(self.fc1(x))
+        output = self.fc2(x)
+
+        return output
+
+
 def get_label(x: int) -> torch.tensor:
     """
     The goal of this function
@@ -58,45 +97,6 @@ def load_mnist_data(batch_size: int = 128) -> torch._utils:
     return train_loader
 
 
-class Feed_Forward_Neural_Network(nn.Module):
-    """
-    The goal of this class is creating
-    a basic neural network that will
-    be used with the coded optimizer to
-    check its working well
-
-    Arguments:
-        -None
-    Returns:
-        -None
-    """
-
-    def __init__(self):
-        super(Feed_Forward_Neural_Network, self).__init__()
-        self.fc1 = nn.Linear(28 * 28, 128)
-        self.fc2 = nn.Linear(128, 10)
-
-    def forward(self, x: torch.tensor) -> torch.tensor:
-        """
-        The goal of this function is
-        to apply a forward pass operation
-        to a given input data
-
-        Arguments:
-            -x: torch.tensor: The input
-            data
-        Returns:
-            -output: torch.tensor: The
-            transformed input data
-        """
-
-        x = x.view(-1, 28 * 28)
-        x = torch.relu(self.fc1(x))
-        output = self.fc2(x)
-
-        return output
-
-
 def launch_training(
     optimizer: torch.optim = Adam, num_epochs: int = 10, lr: float = 1e-3
 ) -> None:
@@ -138,3 +138,7 @@ def launch_training(
                     f"Step[{i+1}/{n_total_steps}], "
                     f"Loss: {loss.item(): .4f}"
                 )
+
+
+def optim_visualisation():
+    pass

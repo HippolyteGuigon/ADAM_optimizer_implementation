@@ -55,6 +55,14 @@ class Adamax(Optimizer):
     pass
 
 
+class Adagrad(Optimizer):
+    pass
+
+
+class Adadelta(Optimizer):
+    pass
+
+
 class Nadam(Optimizer):
     pass
 

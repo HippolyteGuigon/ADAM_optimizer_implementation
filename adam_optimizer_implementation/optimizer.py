@@ -43,11 +43,19 @@ class Optimizer:
         raise NotImplementedError("Subclasses must implement the step method")
 
 
-class SGD:
+class SGD(Optimizer):
     pass
 
 
-class RMSProp:
+class RMSProp(Optimizer):
+    pass
+
+
+class Adamax(Optimizer):
+    pass
+
+
+class Nadam(Optimizer):
     pass
 
 

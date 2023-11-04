@@ -116,9 +116,9 @@ class Adam(Optimizer):
             -None
         """
 
+        self.t += 1
         with torch.no_grad():
             for i, model_param in enumerate(self.model.parameters()):
-                self.t += 1
                 self.g = model_param.grad
                 self.m[i] = self.beta1 * self.m[i] + (1 - self.beta1) * self.g
                 self.v[i] = self.beta2 * self.v[i] + (1 - self.beta2) * self.g**2

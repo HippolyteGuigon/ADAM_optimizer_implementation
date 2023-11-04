@@ -121,13 +121,22 @@ def launch_training(
     n_total_steps = len(train_loader)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    
+    
 
     for epoch in range(num_epochs):
         for i, (images, labels) in enumerate(train_loader):
-            images = images.reshape(-1, 28 * 28).to(device)
-            labels = labels.to(device)
-            outputs = model(images)
-            loss = criterion(outputs, labels)
+            batch_size=images.size()[0]
+            mini_batch_size=int(batch_size/2)
+            
+            permutation=torch.randperm(batch_size)
+            mini_batch_indexes=permutation[:mini_batch_size]
+            image_mini_batch, labels_mini_batch= images[mini_batch_indexes], labels[mini_batch_indexes]
+
+            image_mini_batch = image_mini_batch.reshape(-1, 28 * 28).to(device)
+            labels_mini_batch = labels_mini_batch.to(device)
+            outputs = model(image_mini_batch)
+            loss = criterion(outputs, labels_mini_batch)
             loss.backward()
             optimizer.zero_grad()
             optimizer.step()

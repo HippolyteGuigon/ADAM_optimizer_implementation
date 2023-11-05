@@ -19,9 +19,8 @@ class Optimizer:
         -None
     """
 
-    def __init__(self, params: Dict, lr: float = 1e-3) -> None:
+    def __init__(self, params: Dict) -> None:
         self.params = params
-        self.lr = lr
 
     def zero_grad(self) -> None:
         """
@@ -44,7 +43,47 @@ class Optimizer:
 
 
 class SGD(Optimizer):
-    pass
+    """
+    The goal of this class is to code
+    the SGD optimizer with momentum
+
+    Arguments:
+        -params: Dict: The initial parameters
+        to be optimized
+        -lr: float: The learning_rate
+        to be applied
+    Returns:
+        -None
+    """
+
+    def __init__(
+        self, params: Dict, model: nn.Module, momentum: float = 0.5, lr: float = 1e-3
+    ) -> None:
+        super(SGD, self).__init__(params)
+        assert 0 <= momentum <= 1, "momentum value should be between 0 and 1"
+        self.params = params
+        self.momentum = [momentum * torch.zeros(size=p.size()) for p in self.params]
+        self.model = model
+        self.v = 0
+        self.lr = lr
+        assert self.lr > 0, "learning rate (lr) can't be negative"
+
+    def step(self):
+        """
+        The goal of this function is to apply
+        an optimisation step to the parameters
+        according to SGD rules
+
+        Arguments:
+            -None
+        Returns:
+            -None
+        """
+
+        for i, param in enumerate(self.model.parameters()):
+            self.g = param.grad
+            self.v = self.momentum[i] * self.v + (1 - self.momentum[i]) * self.g
+            param.data -= self.lr * self.v
 
 
 class RMSProp(Optimizer):

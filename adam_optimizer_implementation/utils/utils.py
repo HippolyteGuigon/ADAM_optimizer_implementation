@@ -3,7 +3,7 @@ import torch
 import numpy as np
 import warnings
 import torch.nn as nn
-from ..optim.optimizer import Adam
+from ..optim.optimizer import Adam, SGD
 
 warnings.filterwarnings("ignore")
 
@@ -98,7 +98,7 @@ def load_mnist_data(batch_size: int = 128) -> torch._utils:
 
 
 def launch_training(
-    optimizer: torch.optim = Adam, num_epochs: int = 10, lr: float = 1e-3
+    optimizer: torch.optim = SGD, num_epochs: int = 10, lr: float = 1e-3
 ) -> None:
     """
     The goal of this function is to
@@ -112,6 +112,8 @@ def launch_training(
     Returns:
         -None
     """
+
+    assert optimizer in [SGD, Adam], f"optimizer should be SGD or Adam, got {optimizer}"
 
     model = Feed_Forward_Neural_Network()
     criterion = nn.CrossEntropyLoss()

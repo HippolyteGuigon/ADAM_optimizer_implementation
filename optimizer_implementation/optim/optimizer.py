@@ -64,7 +64,7 @@ class SGD(Optimizer):
         self.params = params
         self.momentum = [momentum * torch.zeros(size=p.size()) for p in self.params]
         self.model = model
-        self.v = [t for t in self.momentum]
+        self.v = copy.deepcopy(self.momentum)
         self.lr = lr
         assert self.lr > 0, "learning rate (lr) can't be negative"
 

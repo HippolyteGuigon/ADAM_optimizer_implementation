@@ -1,4 +1,0 @@
-name: adam_optimizer_implementation
-channels:
-  - defaults
-prefix: /Users/hippolyteguigon/mambaforge/envs/adam_optimizer_implementation

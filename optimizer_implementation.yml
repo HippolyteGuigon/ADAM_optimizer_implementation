@@ -1,0 +1,4 @@
+name: optimizer_implementation
+channels:
+  - defaults
+prefix: /Users/hippolyteguigon/mambaforge/envs/optimizer_implementation

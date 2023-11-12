@@ -1,6 +1,6 @@
-# ADAM_optimizer_implementation
+# Optimizer_implementation
 
-The goal of this repository is the implementation in Pytorch of the Adaptative Moment Estimation (Adam) algorithm
+The goal of this repository is the implementation in Pytorch of the main optimizers existing (Adam, SGD, Adagrad, Adadelta, RMSProp) algorithms
 
 ## Build Status
 
@@ -15,7 +15,7 @@ The all project was coded under PEP-8 (https://peps.python.org/pep-0008/) and fl
 
 ## Installation
 
-* This project uses a specific conda environment, to get it, run the following command: ```conda env create -f adam_optimizer_implementation.yml```
+* This project uses a specific conda environment, to get it, run the following command: ```conda env create -f optimizer_implementation.yml```
 
 * To install all necessary libraries, run the following code: ```pip install -r requirements.txt```
 
@@ -25,6 +25,6 @@ The all project was coded under PEP-8 (https://peps.python.org/pep-0008/) and fl
 
 ![Adam optimization](ressources/Adam.gif)
 
-Adam optimization performed on a convex function
+Gradient descent optimization performed on a convex function
 
 ## How to use ?

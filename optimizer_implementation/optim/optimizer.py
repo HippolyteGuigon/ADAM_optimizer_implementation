@@ -64,7 +64,7 @@ class SGD(Optimizer):
         self.params = params
         self.momentum = [momentum * torch.zeros(size=p.size()) for p in self.params]
         self.model = model
-        self.v = 0
+        self.v = [t for t in self.momentum]
         self.lr = lr
         assert self.lr > 0, "learning rate (lr) can't be negative"
 
@@ -82,8 +82,8 @@ class SGD(Optimizer):
 
         for i, param in enumerate(self.model.parameters()):
             self.g = param.grad
-            self.v = self.momentum[i] * self.v + (1 - self.momentum[i]) * self.g
-            param.data -= self.lr * self.v
+            self.v[i] = self.momentum[i] * self.v[i] + (1 - self.momentum[i]) * self.g
+            param.data -= self.lr * self.v[i]
 
 
 class RMSProp(Optimizer):

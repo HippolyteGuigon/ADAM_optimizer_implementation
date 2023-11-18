@@ -13,8 +13,6 @@ class Optimizer:
     Parameters:
         -params: Dict: The initial parameters
         to be optimized
-        -lr: float: The learning_rate
-        to be applied
     Returns:
         -None
     """
@@ -89,7 +87,7 @@ class SGD(Optimizer):
 class RMSProp(Optimizer):
     """
     The goal of this class is the implementation
-    of the RMPRop optimizer algorithm
+    of the RMSPRop optimizer algorithm
 
     Parameters:
         -params: Dict: The initial parameters
@@ -216,7 +214,60 @@ class Adamax(Optimizer):
 
 
 class Adagrad(Optimizer):
-    pass
+    """
+    The goal of this class is the implementation
+    of the Adagrad optimizer algorithm
+
+    Parameters:
+        -params: Dict: The initial parameters
+        to be optimized
+        -lr: float: The learning_rate
+        to be applied
+        -epsilon: float: The minimal denominator to be
+        applied during optimization
+
+    Returns:
+        -None
+    """
+
+    def __init__(
+        self,
+        params: Dict,
+        model: nn.Module,
+        epsilon: float = 1e-08,
+        lr: float = 1e-03,
+        **kwargs
+    ) -> None:
+        super(Adagrad, self).__init__(params)
+        self.params = params
+        self.updated_params = []
+        self.lr = lr
+        self.epsilon = epsilon
+        self.model = model
+        self.squared_sum = [
+            torch.zeros(size=(layer.in_features, 1)) for layer in self.model.children()
+        ]
+        assert epsilon > 0, "epsilon parameter must be strictly positive"
+
+    def step(self) -> None:
+        """
+        The goal of this function is to apply
+        an optimisation step to the parameters
+        according to ADAM rules
+
+        Arguments:
+            -None
+        Returns:
+            -None
+        """
+
+        with torch.no_grad():
+            for i, model_param in enumerate(self.model.parameters()):
+                self.g = model_param.grad
+                self.squared_sum[i] += self.g**2
+                model_param.data -= (
+                    self.lr * self.g / (torch.sqrt(self.squared_sum[i] + self.epsilon))
+                )
 
 
 class Adadelta(Optimizer):

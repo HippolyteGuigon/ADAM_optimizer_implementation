@@ -3,7 +3,8 @@ import torch
 import numpy as np
 import warnings
 import torch.nn as nn
-from ..optim.optimizer import Adam, SGD
+from typing import List
+from ..optim.optimizer import Adam, SGD, Adamax
 
 warnings.filterwarnings("ignore")
 
@@ -113,7 +114,11 @@ def launch_training(
         -None
     """
 
-    assert optimizer in [SGD, Adam], f"optimizer should be SGD or Adam, got {optimizer}"
+    assert optimizer in [
+        SGD,
+        Adam,
+        Adamax,
+    ], f"optimizer should be SGD or Adam, got {optimizer}"
 
     model = Feed_Forward_Neural_Network()
     criterion = nn.CrossEntropyLoss()
@@ -142,5 +147,39 @@ def launch_training(
                 )
 
 
-def optim_visualisation():
-    pass
+def get_training_lossses(
+    optimizer: torch.optim = SGD, num_epochs: int = 10, lr: float = 1e-3
+) -> List:
+    """
+    The goal of this function is to
+    store the losses of the optimizers
+    at different steps
+    """
+
+    assert optimizer in [
+        SGD,
+        Adam,
+        Adamax,
+    ], f"optimizer should be SGD or Adam, got {optimizer}"
+
+    losses = []
+    model = Feed_Forward_Neural_Network()
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optimizer(model=model, params=model.parameters(), lr=lr)
+
+    train_loader = load_mnist_data()
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    for epoch in range(num_epochs):
+        for i, (images, labels) in enumerate(train_loader):
+            images = images.reshape(-1, 28 * 28).to(device)
+            labels = labels.to(device)
+            outputs = model(images)
+            loss = criterion(outputs, labels)
+            losses.apppend(loss.item())
+            loss.backward()
+            optimizer.zero_grad()
+            optimizer.step()
+
+    return losses

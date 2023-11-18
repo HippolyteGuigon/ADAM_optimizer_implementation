@@ -177,7 +177,7 @@ def get_training_lossses(
             labels = labels.to(device)
             outputs = model(images)
             loss = criterion(outputs, labels)
-            losses.apppend(loss.item())
+            losses.append(loss.item())
             loss.backward()
             optimizer.zero_grad()
             optimizer.step()

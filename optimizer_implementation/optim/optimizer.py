@@ -87,7 +87,64 @@ class SGD(Optimizer):
 
 
 class RMSProp(Optimizer):
-    pass
+    """
+    The goal of this class is the implementation
+    of the RMPRop optimizer algorithm
+
+    Parameters:
+        -params: Dict: The initial parameters
+        to be optimized
+        -lr: float: The learning_rate
+        to be applied
+        -betas: float: The weight decay to be applied
+        to the second-order weight
+        -epsilon: float: The minimal denominator to be
+        applied during optimization
+
+    Returns:
+        -None
+    """
+
+    def __init__(
+        self,
+        params: Dict,
+        model: nn.Module,
+        beta: float = 0.9,
+        epsilon: float = 1e-08,
+        lr: float = 1e-03,
+        **kwargs
+    ) -> None:
+        super(RMSProp, self).__init__(params)
+        self.params = params
+        self.updated_params = []
+        self.beta = beta
+        self.v = [torch.zeros(size=p.size()) for p in self.params]
+        self.lr = lr
+        self.epsilon = epsilon
+        self.model = model
+
+        assert 0 <= self.beta <= 1, "beta must be between 0 and 1"
+        assert epsilon > 0, "epsilon parameter must be strictly positive"
+
+    def step(self) -> None:
+        """
+        The goal of this function is to apply
+        an optimisation step to the parameters
+        according to ADAM rules
+
+        Arguments:
+            -None
+        Returns:
+            -None
+        """
+
+        with torch.no_grad():
+            for i, model_param in enumerate(self.model.parameters()):
+                self.g = model_param.grad
+                self.v[i] = self.beta * self.v[i] + (1 - self.beta) * self.g**2
+                model_param.data -= (
+                    self.lr * self.g / (torch.sqrt(self.v[i] + self.epsilon))
+                )
 
 
 class Adamax(Optimizer):

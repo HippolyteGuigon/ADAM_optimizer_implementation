@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
 from typing import List
 from optimizer_implementation.utils.utils import get_training_lossses
-from optimizer_implementation.optim.optimizer import Adam, Adamax, SGD
+from optimizer_implementation.optim.optimizer import Adam, Adamax, SGD, RMSProp
 
 
 def plot_optimizer_losses(
-    chosen_otimizers: List = [Adam, Adamax, SGD], num_epochs: int = 5
+    chosen_otimizers: List = [Adam, Adamax, SGD, RMSProp], num_epochs: int = 5
 ) -> None:
     dict_loss = {}
 

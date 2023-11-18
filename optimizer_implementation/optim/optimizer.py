@@ -91,7 +91,71 @@ class RMSProp(Optimizer):
 
 
 class Adamax(Optimizer):
-    pass
+    """
+    The goal of this class is the implementation
+    of the Adamax optimizer algorithm
+
+    Parameters:
+        -params: Dict: The initial parameters
+        to be optimized
+        -lr: float: The learning_rate
+        to be applied
+        -betas: Tuple: The couple of betas to be
+        applied respectively for first and second-order
+        gradient moment
+        -epsilon: float: The minimal denominator to be
+        applied during optimization
+
+    Returns:
+        -None
+    """
+
+    def __init__(
+        self,
+        params: Dict,
+        model: nn.Module,
+        betas: Tuple[float, float] = (0.9, 0.999),
+        epsilon: float = 1e-08,
+        lr: float = 1e-03,
+        **kwargs
+    ) -> None:
+        super(Adamax, self).__init__(params)
+        self.params = params
+        self.updated_params = []
+        self.beta1 = betas[0]
+        self.beta2 = betas[1]
+        self.m = [torch.zeros(size=p.size()) for p in self.params]
+        self.v = copy.deepcopy(self.m)
+        self.t = 0
+        self.lr = lr
+        self.epsilon = epsilon
+        self.model = model
+
+        assert 0 <= self.beta1 <= 1, "beta1 must be between 0 and 1"
+        assert 0 <= self.beta2 <= 1, "beta2 must be between 0 and 1"
+        assert epsilon > 0, "epsilon parameter must be strictly positive"
+
+    def step(self) -> None:
+        """
+        The goal of this function is to apply
+        an optimisation step to the parameters
+        according to ADAM rules
+
+        Arguments:
+            -None
+        Returns:
+            -None
+        """
+
+        self.t += 1
+        with torch.no_grad():
+            for i, model_param in enumerate(self.model.parameters()):
+                self.g = model_param.grad
+                self.m[i] = self.beta1 * self.m[i] + (1 - self.beta1) * self.g
+                self.v[i] = self.beta2 * self.v[i] + (1 - self.beta2) * self.g**2
+                debiased_m = self.m[i] / (1 - self.beta1**self.t)
+                normed_v = torch.max(self.beta2 * self.v[i], torch.abs(self.g))
+                model_param.data -= self.lr * debiased_m / (normed_v + self.epsilon)
 
 
 class Adagrad(Optimizer):
@@ -135,7 +199,7 @@ class Adam(Optimizer):
         lr: float = 1e-03,
         **kwargs
     ) -> None:
-        super().__init__(params, lr)
+        super(Adam, self).__init__(params)
         self.params = params
         self.updated_params = []
         self.beta1 = betas[0]

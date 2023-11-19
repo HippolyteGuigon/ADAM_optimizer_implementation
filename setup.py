@@ -8,5 +8,6 @@ setup(
     ),
     description="Python programm for creating a replica\
         of the principal Pytorch optimizerss",
+    setup_requires=["wheel"],
     author="Hippolyte Guigon",
 )

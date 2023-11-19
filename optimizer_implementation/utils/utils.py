@@ -4,7 +4,7 @@ import numpy as np
 import warnings
 import torch.nn as nn
 from typing import List
-from ..optim.optimizer import Adam, SGD, Adamax, RMSProp, Adagrad
+from ..optim.optimizer import Adam, SGD, Adamax, RMSProp, Adagrad, Adadelta
 
 warnings.filterwarnings("ignore")
 
@@ -122,6 +122,7 @@ def launch_training(
         Adamax,
         RMSProp,
         Adagrad,
+        Adadelta,
     ], f"optimizer should be SGD or Adam, got {optimizer}"
 
     model = Feed_Forward_Neural_Network()
@@ -166,6 +167,7 @@ def get_training_lossses(
         Adamax,
         RMSProp,
         Adagrad,
+        Adadelta,
     ], f"optimizer should be SGD or Adam, got {optimizer}"
 
     losses = []

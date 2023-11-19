@@ -4,6 +4,7 @@
 *.ipynb
 test.py
 data/*
+!requirements.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

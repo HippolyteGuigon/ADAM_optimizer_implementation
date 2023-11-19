@@ -245,7 +245,7 @@ class Adagrad(Optimizer):
         self.epsilon = epsilon
         self.model = model
         self.squared_sum = [
-            torch.zeros(size=(layer.in_features, 1)) for layer in self.model.children()
+            torch.zeros(size=layer.size()) for layer in self.model.parameters()
         ]
         assert epsilon > 0, "epsilon parameter must be strictly positive"
 

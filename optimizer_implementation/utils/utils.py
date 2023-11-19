@@ -25,7 +25,8 @@ class Feed_Forward_Neural_Network(nn.Module):
     def __init__(self):
         super(Feed_Forward_Neural_Network, self).__init__()
         self.fc1 = nn.Linear(28 * 28, 128)
-        self.fc2 = nn.Linear(128, 10)
+        self.fc2 = nn.Linear(128, 128)
+        self.fc3 = nn.Linear(128, 10)
 
     def forward(self, x: torch.tensor) -> torch.tensor:
         """
@@ -43,7 +44,8 @@ class Feed_Forward_Neural_Network(nn.Module):
 
         x = x.view(-1, 28 * 28)
         x = torch.relu(self.fc1(x))
-        output = self.fc2(x)
+        x = torch.relu(self.fc2(x))
+        output = self.fc3(x)
 
         return output
 

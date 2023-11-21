@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import multiprocessing
+from joblib import Parallel, delayed
 from typing import List
 from optimizer_implementation.utils.utils import get_training_lossses
 from optimizer_implementation.optim.optimizer import Adam, Adamax, SGD, RMSProp, Adagrad
@@ -9,11 +11,15 @@ def plot_optimizer_losses(
 ) -> None:
     dict_loss = {}
 
-    for optimizer in chosen_otimizers:
-        optimizer_name = optimizer.__name__
-        losses = get_training_lossses(optimizer, num_epochs=num_epochs)
+    num_cores = multiprocessing.cpu_count()
 
-        dict_loss[optimizer_name] = losses
+    processed_list = Parallel(n_jobs=num_cores)(
+        delayed(get_training_lossses)(optimizer) for optimizer in chosen_otimizers
+    )
+
+    for optimizer, loss in zip(chosen_otimizers, processed_list):
+        optimizer_name = optimizer.__name__
+        dict_loss[optimizer_name] = loss
 
     plt.figure(figsize=(10, 6))
 

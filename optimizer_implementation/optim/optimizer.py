@@ -128,7 +128,7 @@ class RMSProp(Optimizer):
         """
         The goal of this function is to apply
         an optimisation step to the parameters
-        according to ADAM rules
+        according to RMSProp rules
 
         Arguments:
             -None
@@ -209,8 +209,8 @@ class Adamax(Optimizer):
                 self.m[i] = self.beta1 * self.m[i] + (1 - self.beta1) * self.g
                 self.v[i] = self.beta2 * self.v[i] + (1 - self.beta2) * self.g**2
                 debiased_m = self.m[i] / (1 - self.beta1**self.t)
-                normed_v = torch.max(self.beta2 * self.v[i], torch.abs(self.g))
-                model_param.data -= self.lr * debiased_m / (normed_v + self.epsilon)
+                max_norm = torch.max(self.beta2 * self.v[i], torch.abs(self.g))
+                model_param.data -= self.lr * debiased_m / (max_norm + self.epsilon)
 
 
 class Adagrad(Optimizer):
@@ -253,7 +253,7 @@ class Adagrad(Optimizer):
         """
         The goal of this function is to apply
         an optimisation step to the parameters
-        according to ADAM rules
+        according to Adagrad rules
 
         Arguments:
             -None
@@ -268,84 +268,6 @@ class Adagrad(Optimizer):
                 model_param.data -= (
                     self.lr * self.g / (torch.sqrt(self.squared_sum[i] + self.epsilon))
                 )
-
-
-class Adadelta(Optimizer):
-    """
-    The goal of this class is the implementation
-    of the RMSPRop optimizer algorithm
-
-    Parameters:
-        -params: Dict: The initial parameters
-        to be optimized
-        -betas: float: The weight decay to be applied
-        to the second-order weight
-        -epsilon: float: The minimal denominator to be
-        applied during optimization
-
-    Returns:
-        -None
-    """
-
-    def __init__(
-        self,
-        params: Dict,
-        model: nn.Module,
-        beta: float = 0.9,
-        epsilon: float = 1e-08,
-        **kwargs
-    ) -> None:
-        super(Adadelta, self).__init__(params)
-        self.params = params
-        self.updated_params = []
-        self.beta = beta
-        self.model = model
-        self.squared_grad = [
-            torch.zeros(size=layer.size()) for layer in self.model.parameters()
-        ]
-        self.aggr_update = [
-            torch.zeros(size=layer.size()) for layer in self.model.parameters()
-        ]
-        self.epsilon = epsilon
-        self.model = model
-
-        assert 0 <= self.beta <= 1, "beta must be between 0 and 1"
-        assert epsilon > 0, "epsilon parameter must be strictly positive"
-
-    def step(self) -> None:
-        """
-        The goal of this function is to apply
-        an optimisation step to the parameters
-        according to ADAM rules
-
-        Arguments:
-            -None
-        Returns:
-            -None
-        """
-
-        with torch.no_grad():
-            for i, model_param in enumerate(self.model.parameters()):
-                self.g = model_param.grad
-                print(self.squared_grad[i].size(), self.g.size())
-                self.squared_grad = (
-                    self.beta * self.squared_grad[i] + (1 - self.beta) * self.g**2
-                )
-                w_last = copy.deepcopy(model_param.data)
-                model_param.data -= (
-                    self.g
-                    * torch.sqrt(self.aggr_update[i] + self.epsilon)
-                    / (torch.sqrt(self.squared_grad[i] + self.epsilon))
-                )
-                delta = model_param.data - w_last
-                self.aggr_update = (
-                    self.beta * self.aggr_update[i] + (1 - self.beta) * delta
-                )
-                print("Done")
-
-
-class Nadam(Optimizer):
-    pass
 
 
 class Adam(Optimizer):

@@ -4,7 +4,7 @@ The goal of this repository is the implementation in Pytorch of the main optimiz
 
 ## Build Status
 
-For the moment, the project has just begun.
+The project is over and all main algorithms have were built.
 
 Throughout the project, if you see any improvements that could be made in the code, do not hesitate to reach out at
 Hippolyte.guigon@hec.edu. I will be delighted to get some insights !
@@ -28,3 +28,9 @@ The all project was coded under PEP-8 (https://peps.python.org/pep-0008/) and fl
 Gradient descent optimization performed on a convex function
 
 ## How to use ?
+
+To use the optimizer you want with the MNIST dataset, write the following step by step: 
+
+* ```from optimizer_implementation.optim.optimizer import your_chosen_optimizer```
+* ```from optimizer_implementation.utils.utils import launch_training```
+* ```launch_training(optimizer=chosen_optimizer)```

@@ -4,7 +4,7 @@ import numpy as np
 import warnings
 import torch.nn as nn
 from typing import List
-from ..optim.optimizer import Adam, SGD, Adamax, RMSProp, Adagrad, Adadelta
+from ..optim.optimizer import Adam, SGD, Adamax, RMSProp, Adagrad
 
 warnings.filterwarnings("ignore")
 
@@ -88,7 +88,7 @@ def load_mnist_data(batch_size: int = 128) -> torch._utils:
         torchvision.datasets.MNIST(
             "data/",
             train=True,
-            download=False,
+            download=True,
             transform=torchvision.transforms.Compose(
                 [torchvision.transforms.ToTensor()]
             ),
@@ -122,7 +122,6 @@ def launch_training(
         Adamax,
         RMSProp,
         Adagrad,
-        Adadelta,
     ], f"optimizer should be SGD or Adam, got {optimizer}"
 
     model = Feed_Forward_Neural_Network()
@@ -153,7 +152,7 @@ def launch_training(
 
 
 def get_training_lossses(
-    optimizer: torch.optim = SGD, num_epochs: int = 10, lr: float = 1e-3
+    optimizer: torch.optim = SGD, num_epochs: int = 5, lr: float = 1e-5
 ) -> List:
     """
     The goal of this function is to
@@ -167,7 +166,6 @@ def get_training_lossses(
         Adamax,
         RMSProp,
         Adagrad,
-        Adadelta,
     ], f"optimizer should be SGD or Adam, got {optimizer}"
 
     losses = []
